@@ -15,7 +15,6 @@ class Indicator():
 		self.battery_status_file = "/sys/class/power_supply/BAT1/capacity"
 		self.HEART = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten']
 		iconpath = self.icon_status()
-		print(iconpath)
 		self.indicator = AppIndicator3.Indicator.new(
             self.app_ID, os.path.abspath(iconpath),
             AppIndicator3.IndicatorCategory.OTHER)
@@ -48,15 +47,12 @@ class Indicator():
 			tmp = file.read().splitlines()	
 			battery = int(tmp[0])
 		stat = self.HEART[int(battery/10)]
-		print(int(battery/10))
-		print(battery)
 		return 'img/'+str(stat)+'.png'
 
 	def show_icon(self):
 		while True:
 			time.sleep(50)
 			icon_path = self.icon_status()
-			print(icon_path)
 			self.indicator.set_icon(os.path.abspath(icon_path))
 
 
