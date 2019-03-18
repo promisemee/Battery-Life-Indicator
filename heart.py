@@ -46,7 +46,12 @@ class Indicator():
 		with open(self.battery_status_file) as file:
 			tmp = file.read().splitlines()	
 			battery = int(tmp[0])
-		stat = self.HEART[int(battery/10)]
+		if battery/10 <=3 :
+			bat_stat = 0
+		else : 
+			bat_stat = int(battery/10)
+		stat = self.HEART[bat_stat]
+		
 		return 'img/'+str(stat)+'.png'
 
 	def show_icon(self):
