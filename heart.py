@@ -21,7 +21,6 @@ class Indicator():
 		self.indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)       
 		self.indicator.set_menu(self.build_menu())
 
-        
         # the thread:
 		self.update = Thread(target=self.show_icon)
         # daemonize the thread to make the indicator stopable
@@ -30,26 +29,33 @@ class Indicator():
 
 	def build_menu(self):
 	    menu = gtk.Menu()
-	    item_battery = gtk.MenuItem('Brightness')
+	    battery_stat = str(self.battery_status())+"%"
+	    item_battery = gtk.MenuItem(battery_stat)
+	    #item_quit = gtk.MenuItem('Quit')
+	    #item_quit.connect('activate', quit)
 	    menu.append(item_battery)
-	    item_quit = gtk.MenuItem('Quit')
-	    item_quit.connect('activate', quit)
-	    menu.append(item_quit)
+	    #menu.append(item_quit)
 	    menu.show_all()
 	    return menu
 
 	def quit(source):
 	    gtk.main_quit()
 
-	def icon_status(self):
-		stat = self.HEART[10]
+
+	def battery_status(self):
 		with open(self.battery_status_file) as file:
 			tmp = file.read().splitlines()	
-			battery = int(tmp[0])
+			battery = int(tmp[0])	
+		return battery
+
+
+	def icon_status(self):
+		stat = self.HEART[10]
+		battery = self.battery_status()
 		if battery == 100:
 			bat_stat = 10
 		else:
-			bat_stat = int(battery/10+1)
+			bat_stat = int(battery/10)
 		stat = self.HEART[bat_stat]		
 		return 'img/'+str(stat)+'.png'
 
@@ -58,6 +64,7 @@ class Indicator():
 			time.sleep(50)
 			icon_path = self.icon_status()
 			self.indicator.set_icon(os.path.abspath(icon_path))
+			self.indicator.set_menu(self.build_menu())
 
 
 
